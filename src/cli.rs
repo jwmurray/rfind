@@ -35,29 +35,18 @@ pub fn get_options() -> Options {
                 .required(false)
                 .index(1),
         )
-        .arg(
-            Arg::with_name("inner_pattern")
-                .help("Specify pattern for file system entry.")
-                .default_value(".*")
-                .required(false)
-                .index(2),
-        )
         .get_matches();
+
     let path = matches.value_of("path").unwrap_or("default.path");
-    let pattern_string
-     = matches
-        .value_of("regex_pattern")
-        .unwrap_or("default.regex_pattern");
+    let arg
+     = matches.value_of("regex_pattern").unwrap_or("default.regex_pattern");
 
-    let mut pattern = Option<Regex> = None;
-    pattern = match regex::Regex::new(pattern ) {
+    let mut pattern: Option<Regex> = None;
+    pattern = match regex::Regex::new(arg ) {
         Ok(regex) => Some(regex),
-        Err(error) => return Err(ParseError(format!("Couldn't compile regex pattern. {}", error)))
+        Err(error) => return Err(ParseError(format!("Couldn't compile regex pattern. {}", error))),
     }
 
-    println!("Path: {}, pattern: {}", path, pattern);
-    Options {
-        path: String::from(path),
-        pattern: String::from(pattern),
-    }
+    Options("hello".to_string(), pattern)
 }
+
